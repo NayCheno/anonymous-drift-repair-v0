@@ -1,0 +1,5 @@
+system,n_examples,drift_type_exact_match,micro_precision,micro_recall,micro_f1,repair_rate,over_repair_rate,avg_extra_tokens,avg_extra_retrievals,avg_extra_tool_calls
+sage_r,300,1.0000,1.0000,1.0000,1.0000,0.8533,0.0000,42.08,0.5667,0.1933
+query_rewrite_rag,300,0.2900,1.0000,0.3128,0.4765,0.2367,0.0000,4.26,0.2367,0.0000
+self_reflection,300,0.4300,1.0000,0.6233,0.7680,0.6133,0.0000,39.25,0.0000,0.0000
+vanilla_rag,300,0.1467,0.0000,0.0000,0.0000,0.0000,0.0000,0.00,0.0000,0.0000

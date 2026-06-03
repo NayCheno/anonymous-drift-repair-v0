@@ -1,0 +1,14 @@
+experiment:
+  name: sage_r_toy_smoke
+  seed: 42
+  dataset: toy
+  output_dir: results
+  metrics:
+    - task_success
+    - state_consistency
+    - recovery_rate
+    - over_repair_rate
+    - repair_cost
+  logging:
+    save_traces: True
+    save_state_graph: True

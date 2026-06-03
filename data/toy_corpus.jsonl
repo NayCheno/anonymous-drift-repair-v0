@@ -1,0 +1,3 @@
+{"id": "doc_reap", "text": "REAP maintains structured sub-tasks and facts through recursive evaluation and adaptive planning for multi-hop RAG."}
+{"id": "doc_mtrag", "text": "MTRAG is a multi-turn RAG benchmark with human-generated conversations and tasks involving unanswerable and non-standalone questions."}
+{"id": "doc_tau", "text": "tau-bench evaluates tool-augmented agents by comparing final database states with target states."}

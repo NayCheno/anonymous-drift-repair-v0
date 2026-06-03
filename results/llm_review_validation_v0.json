@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "annotator_a_rows": 240,
+    "annotator_b_rows": 48,
+    "expected_agreement_rows": 2,
+    "requires_no_api_call": true
+  },
+  "errors": [],
+  "valid": true
+}

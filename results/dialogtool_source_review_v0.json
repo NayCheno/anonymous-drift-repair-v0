@@ -1,0 +1,44 @@
+{
+  "dataset": "dialogtool",
+  "review_date": "2026-06-03",
+  "paper": {
+    "title": "Rethinking Stateful Tool Use in Multi-Turn Dialogues: Benchmarks and Challenges",
+    "arxiv_url": "https://arxiv.org/abs/2505.13328",
+    "acl_url": "https://aclanthology.org/2025.findings-acl.284/",
+    "doi": "10.18653/v1/2025.findings-acl.284"
+  },
+  "search_queries": [
+    "\"DialogTool\" \"Stateful Tool Use\" GitHub",
+    "\"DialogTool\" \"2505.13328\"",
+    "\"Rethinking Stateful Tool Use in Multi-Turn Dialogues\" DialogTool",
+    "\"Rethinking Stateful Tool Use in Multi-Turn Dialogues\" GitHub"
+  ],
+  "reviewed_sources": [
+    {
+      "source": "arXiv",
+      "url": "https://arxiv.org/abs/2505.13328",
+      "finding": "Paper record found; no authoritative public repository or dataset license confirmed from the reviewed page content."
+    },
+    {
+      "source": "ACL Anthology",
+      "url": "https://aclanthology.org/2025.findings-acl.284/",
+      "finding": "Publication record and DOI found; no official dataset repository or dataset license link confirmed from the reviewed page content."
+    },
+    {
+      "source": "Web search",
+      "url": null,
+      "finding": "Search results pointed to paper pages and third-party indexes rather than an authoritative upstream repository with license terms."
+    }
+  ],
+  "authoritative_repository_confirmed": false,
+  "license_confirmed": false,
+  "license_spdx": null,
+  "redistribution": "unknown",
+  "recommended_config": {
+    "enabled": false,
+    "license_status": "pending",
+    "redistribution": "unknown"
+  },
+  "valid_for_release": true,
+  "notes": "This is a source-review evidence artifact, not permission to use or redistribute DialogTool data."
+}

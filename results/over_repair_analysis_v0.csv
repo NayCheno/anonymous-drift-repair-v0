@@ -1,0 +1,5 @@
+system,n_examples,n_clean_gold,n_over_repaired,over_repair_rate,clean_action_distribution,over_repair_action_distribution
+query_rewrite_rag,300,44,0,0.0000,"{""answer_as_is"": 44}",{}
+sage_r,300,44,0,0.0000,"{""answer_as_is"": 44}",{}
+self_reflection,300,44,0,0.0000,"{""answer_as_is"": 44}",{}
+vanilla_rag,300,44,0,0.0000,"{""answer_as_is"": 44}",{}

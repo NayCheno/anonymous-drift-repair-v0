@@ -1,0 +1,99 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{url}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=*,topsep=2pt,itemsep=1pt}
+\setlist[enumerate]{leftmargin=*,topsep=2pt,itemsep=1pt}
+
+\title{Supplementary Material: DRIFT-Repair}
+\author{Anonymous Authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Scope of This Supplement}
+
+This supplement documents the deterministic DriftBench v0 scaffold included with the current anonymous research package. It is intended to make the code, data schema, analysis scripts, and release checks reproducible before external datasets and model-backed experiments are added. The v0 numbers are pipeline-validation results, not final benchmark claims.
+
+\section{Reproduction Command}
+
+The complete deterministic v0 scaffold can be regenerated with:
+
+\begin{verbatim}
+python scripts/reproduce_v0.py
+\end{verbatim}
+
+The command rebuilds DriftBench v0 examples, validates the schema, runs SAGE-R and deterministic baseline proxies, computes metrics, generates tables, prepares the human-validation packet, computes proxy agreement, performs over-repair analysis, and regenerates paper table snippets.
+
+\section{Generated Artifacts}
+
+Key generated artifacts are:
+
+\begin{itemize}
+    \item \texttt{data/driftbench\_v0.jsonl}: 300 toy-equivalent draft examples.
+    \item \texttt{results/sage\_r\_v0.jsonl}: deterministic SAGE-R predictions and repair traces.
+    \item \texttt{results/baselines\_v0.jsonl}: three deterministic baseline proxy outputs.
+    \item \texttt{results/main\_table\_v0.csv}: main scaffold result table.
+    \item \texttt{results/drift\_type\_breakdown\_v0.csv}: per-drift-type breakdown.
+    \item \texttt{results/cost\_analysis\_v0.csv}: token/retrieval/tool cost proxy table.
+    \item \texttt{results/ablation\_v0.csv}: module-removal ablation table.
+    \item \texttt{results/human\_agreement\_v0.csv}: answer-key proxy agreement workflow check.
+    \item \texttt{results/human\_agreement\_status\_v0.json}: reportability gate marking the proxy agreement as non-reportable.
+    \item \texttt{results/llm\_human\_agreement\_v0.csv}: Mimo-reviewed validation agreement table.
+    \item \texttt{paper/tables/generated/llm\_human\_agreement\_v0.tex}: generated LaTeX table for Mimo-reviewed validation.
+    \item \texttt{results/llm\_annotation\_status\_v0.json}: completion and disagreement status for the LLM-reviewed validation packet.
+    \item \texttt{results/llm\_review\_validation\_v0.json}: local no-API validation report for committed LLM-reviewed outputs.
+    \item \texttt{results/over\_repair\_analysis\_v0.csv}: clean-case over-repair analysis.
+    \item \texttt{results/case\_studies\_v0.md}: selected deterministic trace examples for qualitative audit.
+\end{itemize}
+
+\section{DriftBench v0 Schema}
+
+Each JSONL example contains:
+
+\begin{itemize}
+    \item \texttt{id};
+    \item \texttt{turns};
+    \item \texttt{retrieved};
+    \item \texttt{tool\_outputs};
+    \item \texttt{candidate\_response};
+    \item \texttt{gold}, including drift labels and expected repair;
+    \item \texttt{metadata}, including schema version, construction method, source template, split, and manual-check status.
+\end{itemize}
+
+The frozen v0 schema version is \texttt{driftbench\_v0.1}. Full field definitions are in
+\url{experiments/driftbench_v0_schema.md}.
+
+\section{Human Validation Packet}
+
+The v0 package includes a 240-case blinded annotation packet with a 48-case double-annotation subset:
+
+\begin{itemize}
+    \item \texttt{data/human\_validation/human\_validation\_annotator\_a\_v0.jsonl};
+    \item \texttt{data/human\_validation/human\_validation\_annotator\_b\_v0.jsonl};
+    \item \texttt{data/human\_validation/human\_validation\_answer\_key\_v0.jsonl};
+    \item \texttt{data/human\_validation/human\_validation\_summary\_v0.json}.
+\end{itemize}
+
+The annotator files are blinded. The answer key is provided for scaffold auditing and must not be used by annotators. The current agreement table uses the answer key as a proxy only; the accompanying status report marks it as non-reportable. In addition, the package includes a completed Mimo-reviewed validation pass over 240 A items and 48 B items. This should be described as LLM-reviewed validation unless it is later replaced by human-only labels.
+
+\section{Anonymous Release Audit}
+
+The current package includes two audit reports:
+
+\begin{itemize}
+    \item \texttt{results/anonymous\_release\_audit\_v0.md};
+    \item \texttt{results/anonymous\_release\_tree\_audit\_v0.md}.
+\end{itemize}
+
+Both report zero configured findings for the deterministic v0 scaffold. The audit scans tracked text files and the local release tree for obvious local paths, username paths, API-key-shaped strings, author markers outside references, and institution markers outside allowed planning documents.
+
+\section{Limitations}
+
+The v0 scaffold is deterministic and rule based. It does not include real retrievers, external benchmark downloads, or model-backed task experiments. It does include an explicitly documented Mimo-reviewed validation pass for the annotation packet. The final submission must replace toy-equivalent v0 results with licensed external datasets, model-backed runs, human or separately justified validation, and statistical testing.
+
+\end{document}

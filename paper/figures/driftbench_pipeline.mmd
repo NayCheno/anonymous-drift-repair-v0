@@ -1,0 +1,8 @@
+flowchart TB
+    A[Existing multi-turn tasks] --> B[Normalize schema]
+    B --> C[Inject/select controlled perturbations]
+    C --> D[Annotate active state]
+    D --> E[Run agents and baselines]
+    E --> F[Diagnose drift]
+    F --> G[Apply typed repair]
+    G --> H[Evaluate task success, consistency, recovery, over-repair, cost]

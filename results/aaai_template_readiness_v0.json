@@ -1,0 +1,55 @@
+{
+  "input": "paper/main.tex",
+  "target_template": "AAAI 2026 author kit used as current public proxy; AAAI-27 kit not yet confirmed.",
+  "template_applied": true,
+  "checks": [
+    {
+      "id": "uses_aaai_style",
+      "severity": "blocker",
+      "passed": true,
+      "expected": true,
+      "found": true,
+      "message": "Submission source should use the official AAAI style package once the target author kit is selected."
+    },
+    {
+      "id": "letterpaper_article",
+      "severity": "blocker",
+      "passed": true,
+      "expected": true,
+      "found": true,
+      "message": "AAAI author kit uses letterpaper article document class."
+    },
+    {
+      "id": "no_geometry",
+      "severity": "blocker",
+      "passed": true,
+      "expected": false,
+      "found": false,
+      "message": "AAAI formatting forbids geometry-based margin changes."
+    },
+    {
+      "id": "no_hyperref",
+      "severity": "blocker",
+      "passed": true,
+      "expected": false,
+      "found": false,
+      "message": "AAAI 2026 instructions forbid hyperref/navigator packages in submitted source."
+    },
+    {
+      "id": "single_source_no_input",
+      "severity": "blocker",
+      "passed": true,
+      "expected": false,
+      "found": false,
+      "message": "AAAI final source should be a single .tex file without section/table input files."
+    },
+    {
+      "id": "anonymous_author",
+      "severity": "warning",
+      "passed": true,
+      "expected": true,
+      "found": true,
+      "message": "Current scaffold should remain anonymous until final author metadata is intentionally added."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
+\toprule
+System & Exact & F1 & Repair & Over-repair & Tokens \\
+\midrule
+SAGE-R & 1.0000 & 1.0000 & 0.8533 & 0.0000 & 42.08 \\
+QueryRewrite & 0.2900 & 0.4765 & 0.2367 & 0.0000 & 4.26 \\
+SelfReflect & 0.4300 & 0.7680 & 0.6133 & 0.0000 & 39.25 \\
+Vanilla & 0.1467 & 0.0000 & 0.0000 & 0.0000 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Deterministic DriftBench v0 scaffold results. These numbers validate the pipeline and are not final benchmark claims.}
+\label{tab:v0-main}
+\end{table}

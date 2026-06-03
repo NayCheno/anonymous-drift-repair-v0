@@ -1,0 +1,43 @@
+drift_types:
+  G1_goal_drift:
+    description: Agent response or action follows an obsolete or incorrect user goal.
+    decision_rule: The active user goal is the latest explicit task objective unless the user asks to combine goals.
+    typical_failure: The response answers an earlier task after the user changes focus or requests a different action.
+    default_severity: 2
+    repair: rollback_and_replan
+  G2_constraint_drift:
+    description: Agent violates an active user/system/domain constraint.
+    decision_rule: Later constraints with the same scope supersede earlier ones; source restrictions and safety/domain rules stay active until explicitly lifted.
+    typical_failure: The response ignores the latest budget, date, source, format, or policy constraint.
+    default_severity: 2
+    repair: rollback_and_replan
+  E1_evidence_drift:
+    description: Generated factual claims are unsupported or contradicted by retrieved evidence.
+    decision_rule: Verifiable claims must be supported by retrieved evidence or tool observations available to the agent.
+    typical_failure: The response invents a statistic, cites contradicted evidence, or states an unsupported fact.
+    default_severity: 2
+    repair: re_retrieve_and_verify
+  E2_retrieval_drift:
+    description: Retrieval query or retrieved context remains aligned with stale intent.
+    decision_rule: Retrieved context should match the active goal and active constraints for the current turn.
+    typical_failure: Retrieval remains about the old topic after a goal shift or constraint update.
+    default_severity: 1
+    repair: rewrite_query_and_retrieve
+  T1_tool_state_drift:
+    description: Agent action or response contradicts tool/database observations.
+    decision_rule: Tool and database observations override agent assumptions and must gate any claimed action.
+    typical_failure: The agent says an operation completed after the tool returns failed, expired, denied, or not eligible.
+    default_severity: 3
+    repair: cross_validate_tool
+  M1_memory_drift:
+    description: Agent uses obsolete memory after an update or supersession.
+    decision_rule: Explicit memory updates supersede previous preferences or facts with the same scope.
+    typical_failure: The response uses an old user preference, address, budget, or profile fact after an update.
+    default_severity: 2
+    repair: update_memory_priority
+  U1_abstention_drift:
+    description: Agent answers when it should clarify/abstain, or refuses when it can answer.
+    decision_rule: The agent should answer only when required slots and evidence are sufficient under the active source constraints.
+    typical_failure: The response fabricates an answer for an unanswerable request or asks for clarification despite sufficient evidence.
+    default_severity: 2
+    repair: calibrate_answer_clarify_abstain

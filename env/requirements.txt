@@ -1,0 +1,12 @@
+pyyaml
+
+# Optional packages for real experiments:
+# pandas
+# numpy
+# scikit-learn
+# rank-bm25
+# sentence-transformers
+# transformers
+# accelerate
+# datasets
+# tqdm

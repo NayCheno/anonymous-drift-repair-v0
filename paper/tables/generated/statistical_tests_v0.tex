@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\toprule
+Comparison & Metric & Delta & 95\% CI & p \\
+\midrule
+SAGE-R $-$ query\_rewrite\_rag & Exact & 0.7100 & [0.6600, 0.7567] & 0.0000 \\
+SAGE-R $-$ query\_rewrite\_rag & Micro-F1 & 0.5235 & [0.4621, 0.5897] & 0.0000 \\
+SAGE-R $-$ self\_reflection & Exact & 0.5700 & [0.5132, 0.6233] & 0.0000 \\
+SAGE-R $-$ self\_reflection & Micro-F1 & 0.2320 & [0.2032, 0.2612] & 0.0000 \\
+SAGE-R $-$ vanilla\_rag & Exact & 0.8533 & [0.8133, 0.8933] & 0.0000 \\
+SAGE-R $-$ vanilla\_rag & Micro-F1 & 1.0000 & [1.0000, 1.0000] & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Paired bootstrap comparisons for the deterministic v0 scaffold. These tests validate the reporting pipeline and are not final statistical claims.}
+\label{tab:v0-stats}
+\end{table}

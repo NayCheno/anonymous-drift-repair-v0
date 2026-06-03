@@ -1,0 +1,63 @@
+datasets:
+  toy:
+    path: data/toy_examples.jsonl
+    adapter: toy
+    enabled: True
+    license_status: internal_scaffold
+    redistribution: allowed
+    license_note: Hand-written toy examples created for this scaffold.
+  driftbench_v0:
+    path: data/driftbench_v0.jsonl
+    adapter: toy
+    enabled: True
+    schema_version: driftbench_v0.1
+    license_status: internal_scaffold
+    redistribution: allowed
+    license_note: Generated from internal hand-written toy templates.
+    note: Deterministic toy-equivalent Week 2 draft set generated from Week 1 templates.
+  mtrag:
+    path: external/mt-rag-benchmark
+    adapter: mtrag
+    enabled: False
+    source_url: https://github.com/IBM/mt-rag-benchmark
+    license_status: checked
+    license_spdx: Apache-2.0
+    license_reviewed_on: '2026-06-03'
+    redistribution: not_redistributed
+    note: Download from the official MTRAG repository and respect its Apache-2.0 license.
+  mtrag_un:
+    path: external/mt-rag-benchmark/mtrag-un
+    adapter: mtrag_un
+    enabled: False
+    source_url: https://github.com/IBM/mt-rag-benchmark
+    license_status: checked
+    license_spdx: Apache-2.0
+    license_reviewed_on: '2026-06-03'
+    redistribution: not_redistributed
+    note: MTRAG-UN is described as part of the same upstream benchmark repository.
+  tau_bench:
+    path: external/tau-bench
+    adapter: tau_bench
+    enabled: False
+    source_url: https://github.com/sierra-research/tau-bench
+    license_status: checked
+    license_spdx: MIT
+    license_reviewed_on: '2026-06-03'
+    redistribution: not_redistributed
+  dialogtool:
+    path: external/dialogtool
+    adapter: dialogtool
+    enabled: False
+    source_url: https://arxiv.org/abs/2505.13328
+    license_status: pending
+    redistribution: unknown
+    note: Paper located, but no authoritative public repository or license was confirmed in this pass.
+  longmemeval:
+    path: external/longmemeval
+    adapter: longmemeval
+    enabled: False
+    source_url: https://github.com/xiaowu0162/LongMemEval
+    license_status: checked
+    license_spdx: MIT
+    license_reviewed_on: '2026-06-03'
+    redistribution: not_redistributed

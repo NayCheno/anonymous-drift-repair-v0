@@ -1,0 +1,32 @@
+{
+  "n_examples": 21.0,
+  "n_gold_drift_examples": 18.0,
+  "drift_detection_rate": 0.8571428571428571,
+  "repair_rate": 0.8571428571428571,
+  "drift_type_exact_match": 1.0,
+  "drift_type_micro_precision": 1.0,
+  "drift_type_micro_recall": 1.0,
+  "drift_type_micro_f1": 1.0,
+  "over_repair_rate": 0.0,
+  "avg_extra_tokens": 42.285714285714285,
+  "avg_extra_retrievals": 0.5714285714285714,
+  "avg_extra_tool_calls": 0.19047619047619047,
+  "gold_type_counts": {
+    "E1_evidence_drift": 6,
+    "E2_retrieval_drift": 5,
+    "G1_goal_drift": 5,
+    "G2_constraint_drift": 5,
+    "M1_memory_drift": 3,
+    "T1_tool_state_drift": 4,
+    "U1_abstention_drift": 4
+  },
+  "pred_type_counts": {
+    "E1_evidence_drift": 6,
+    "E2_retrieval_drift": 5,
+    "G1_goal_drift": 5,
+    "G2_constraint_drift": 5,
+    "M1_memory_drift": 3,
+    "T1_tool_state_drift": 4,
+    "U1_abstention_drift": 4
+  }
+}

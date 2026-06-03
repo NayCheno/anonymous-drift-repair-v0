@@ -1,0 +1,16 @@
+system,repair_action,n_examples,n_repaired,repair_rate,total_extra_tokens,avg_extra_tokens,total_extra_retrievals,avg_extra_retrievals,total_extra_tool_calls,avg_extra_tool_calls
+query_rewrite_rag,ALL,300,71,0.2367,1278,4.26,71,0.2367,0,0.0000
+query_rewrite_rag,answer_as_is,229,0,0.0000,0,0.00,0,0.0000,0,0.0000
+query_rewrite_rag,rewrite_query_and_retrieve,71,71,1.0000,1278,18.00,71,1.0000,0,0.0000
+sage_r,ALL,300,256,0.8533,12624,42.08,170,0.5667,58,0.1933
+sage_r,answer_as_is,44,0,0.0000,0,0.00,0,0.0000,0,0.0000
+sage_r,cross_validate_tool,58,58,1.0000,2436,42.00,0,0.0000,58,1.0000
+sage_r,re_retrieve_and_verify,57,57,1.0000,2850,50.00,57,1.0000,0,0.0000
+sage_r,rollback_and_replan,113,113,1.0000,6554,58.00,113,1.0000,0,0.0000
+sage_r,update_memory_priority,28,28,1.0000,784,28.00,0,0.0000,0,0.0000
+self_reflection,ALL,300,184,0.6133,11776,39.25,0,0.0000,0,0.0000
+self_reflection,answer_as_is,116,0,0.0000,0,0.00,0,0.0000,0,0.0000
+self_reflection,re_retrieve_and_verify,85,85,1.0000,5440,64.00,0,0.0000,0,0.0000
+self_reflection,rollback_and_replan,99,99,1.0000,6336,64.00,0,0.0000,0,0.0000
+vanilla_rag,ALL,300,0,0.0000,0,0.00,0,0.0000,0,0.0000
+vanilla_rag,answer_as_is,300,0,0.0000,0,0.00,0,0.0000,0,0.0000

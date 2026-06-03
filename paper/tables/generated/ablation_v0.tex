@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Variant & Exact & F1 & Repair & Tokens \\
+\midrule
+Full & 1.0000 & 1.0000 & 0.8533 & 42.08 \\
+w/o Goal+Constr. & 0.6700 & 0.8374 & 0.8067 & 37.58 \\
+w/o Retrieval & 0.7633 & 0.9152 & 0.8533 & 42.08 \\
+w/o Evid.+Abst. & 0.7633 & 0.8359 & 0.6633 & 32.58 \\
+w/o Tool & 0.8067 & 0.9139 & 0.6600 & 33.96 \\
+w/o Memory & 0.8600 & 0.9343 & 0.7133 & 36.76 \\
+Diagnose-only & 1.0000 & 1.0000 & 0.0000 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Deterministic ablations on DriftBench v0. Module-removal variants isolate diagnosis coverage in the scaffold.}
+\label{tab:v0-ablation}
+\end{table}

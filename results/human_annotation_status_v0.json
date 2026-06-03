@@ -1,0 +1,342 @@
+{
+  "annotator_a": {
+    "n_items": 240,
+    "n_complete": 0,
+    "n_incomplete": 240,
+    "complete": false,
+    "incomplete_examples": [
+      {
+        "id": "driftbench_v0_0000__toy_clean_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0001__toy_goal_shift_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0002__toy_tool_state_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0004__toy_evidence_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0005__toy_tool_state_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0006__toy_memory_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0007__toy_abstention_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0008__toy_goal_shift_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0010__toy_abstention_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0011__toy_evidence_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0012__toy_tool_state_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0013__toy_retrieval_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0015__toy_memory_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0016__toy_constraint_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0017__toy_constraint_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0019__toy_memory_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0020__toy_clean_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0021__toy_clean_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0023__toy_tool_state_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0024__toy_clean_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      }
+    ]
+  },
+  "annotator_b": {
+    "n_items": 48,
+    "n_complete": 0,
+    "n_incomplete": 48,
+    "complete": false,
+    "incomplete_examples": [
+      {
+        "id": "driftbench_v0_0000__toy_clean_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0001__toy_goal_shift_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0002__toy_tool_state_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0004__toy_evidence_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0005__toy_tool_state_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0006__toy_memory_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0007__toy_abstention_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0008__toy_goal_shift_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0010__toy_abstention_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0011__toy_evidence_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0012__toy_tool_state_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0013__toy_retrieval_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0015__toy_memory_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0016__toy_constraint_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0017__toy_constraint_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0019__toy_memory_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0020__toy_clean_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0021__toy_clean_002",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0023__toy_tool_state_003",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      },
+      {
+        "id": "driftbench_v0_0024__toy_clean_001",
+        "reasons": [
+          "missing_or_invalid_severity",
+          "missing_or_invalid_expected_repair",
+          "missing_or_invalid_task_success"
+        ]
+      }
+    ]
+  },
+  "n_double_annotated": 48,
+  "n_disagreements": 0,
+  "human_annotation_completed": false,
+  "note": "Completion is evaluated on the provided annotation files. For v0, these may be filled by human annotators or an explicitly documented LLM reviewer."
+}

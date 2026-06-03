@@ -1,0 +1,22 @@
+{
+  "agreement_reportable": true,
+  "completion": {
+    "annotator_a": {
+      "complete": true,
+      "n_complete": 240,
+      "n_incomplete": 0,
+      "n_items": 240
+    },
+    "annotator_b": {
+      "complete": true,
+      "n_complete": 48,
+      "n_incomplete": 0,
+      "n_items": 48
+    }
+  },
+  "mode": "filled_annotations",
+  "n_answer_key_items": 240,
+  "n_pairs_a_vs_b": 48,
+  "n_pairs_a_vs_key": 240,
+  "reason": "filled annotation files are complete"
+}

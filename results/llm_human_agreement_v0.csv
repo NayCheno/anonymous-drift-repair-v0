@@ -1,0 +1,3 @@
+comparison,mode,n_pairs,drift_type_agreement,severity_agreement,task_success_agreement,repair_action_agreement
+annotator_a_vs_answer_key,filled_annotations,240,0.4750,0.3583,0.9583,0.3958
+annotator_a_vs_annotator_b,filled_annotations,48,0.5833,0.6250,1.0000,0.7500

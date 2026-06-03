@@ -1,0 +1,35 @@
+{
+  "input": "data/driftbench_v0.jsonl",
+  "target_size": 240,
+  "n_selected": 240,
+  "double_annotate_rate": 0.2,
+  "n_double_annotated": 48,
+  "n_annotator_a": 240,
+  "n_annotator_b": 48,
+  "seed": 42,
+  "primary_label_counts": {
+    "E1_evidence_drift": 29,
+    "G1_goal_drift": 37,
+    "G2_constraint_drift": 28,
+    "M1_memory_drift": 37,
+    "NONE": 37,
+    "T1_tool_state_drift": 36,
+    "U1_abstention_drift": 36
+  },
+  "all_gold_label_counts": {
+    "E1_evidence_drift": 79,
+    "E2_retrieval_drift": 37,
+    "G1_goal_drift": 37,
+    "G2_constraint_drift": 54,
+    "M1_memory_drift": 37,
+    "NONE": 37,
+    "T1_tool_state_drift": 50,
+    "U1_abstention_drift": 51
+  },
+  "files": [
+    "human_validation_packet_v0.jsonl",
+    "human_validation_annotator_a_v0.jsonl",
+    "human_validation_annotator_b_v0.jsonl",
+    "human_validation_answer_key_v0.jsonl"
+  ]
+}

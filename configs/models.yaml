@@ -1,0 +1,79 @@
+models:
+  generator:
+    - name: dummy_generator
+      provider: local_rules
+      version: deterministic_v0.1
+      enabled: True
+      decoding:
+        temperature: 0.0
+        top_p: 1.0
+        max_output_tokens: 256
+      api_model_date: null
+      role: Week 1-8 deterministic scaffold response preservation and typed repair text.
+    - name: strong_api_model
+      provider: placeholder
+      version: null
+      enabled: False
+      decoding:
+        temperature: null
+        top_p: null
+        max_output_tokens: null
+      api_model_date: null
+    - name: open_source_model_a
+      provider: placeholder
+      version: null
+      enabled: False
+      decoding:
+        temperature: null
+        top_p: null
+        max_output_tokens: null
+      api_model_date: null
+    - name: open_source_model_b
+      provider: placeholder
+      version: null
+      enabled: False
+      decoding:
+        temperature: null
+        top_p: null
+        max_output_tokens: null
+      api_model_date: null
+  verifier:
+    - name: dummy_verifier
+      provider: local_rules
+      version: deterministic_v0.1
+      enabled: True
+      decoding:
+        temperature: 0.0
+        top_p: 1.0
+        max_output_tokens: 256
+      api_model_date: null
+      role: Rule-based drift diagnosis and metric scaffold.
+    - name: llm_judge
+      provider: placeholder
+      version: null
+      enabled: False
+      decoding:
+        temperature: null
+        top_p: null
+        max_output_tokens: null
+      api_model_date: null
+retriever:
+  type: keyword
+  version: deterministic_v0.1
+  top_k: 3
+  corpus_path: data/toy_corpus.jsonl
+  preprocessing:
+    lowercase: True
+    strip_punctuation: True
+    split: whitespace
+  chunking:
+    strategy: record_as_chunk
+    max_tokens: null
+    overlap_tokens: 0
+  index:
+    type: in_memory_keyword
+    persist_path: null
+    build_seed: 42
+repair:
+  max_attempts: 1
+  conservative_threshold: 0.65

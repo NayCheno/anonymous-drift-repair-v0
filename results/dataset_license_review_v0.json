@@ -1,0 +1,84 @@
+{
+  "config": "configs/datasets.yaml",
+  "datasets": [
+    {
+      "enabled": true,
+      "license_reviewed_on": null,
+      "license_spdx": null,
+      "license_status": "internal_scaffold",
+      "name": "toy",
+      "path": "data/toy_examples.jsonl",
+      "redistribution": "allowed",
+      "source_url": null
+    },
+    {
+      "enabled": true,
+      "license_reviewed_on": null,
+      "license_spdx": null,
+      "license_status": "internal_scaffold",
+      "name": "driftbench_v0",
+      "path": "data/driftbench_v0.jsonl",
+      "redistribution": "allowed",
+      "source_url": null
+    },
+    {
+      "enabled": false,
+      "license_reviewed_on": "2026-06-03",
+      "license_spdx": "Apache-2.0",
+      "license_status": "checked",
+      "name": "mtrag",
+      "path": "external/mt-rag-benchmark",
+      "redistribution": "not_redistributed",
+      "source_url": "https://github.com/IBM/mt-rag-benchmark"
+    },
+    {
+      "enabled": false,
+      "license_reviewed_on": "2026-06-03",
+      "license_spdx": "Apache-2.0",
+      "license_status": "checked",
+      "name": "mtrag_un",
+      "path": "external/mt-rag-benchmark/mtrag-un",
+      "redistribution": "not_redistributed",
+      "source_url": "https://github.com/IBM/mt-rag-benchmark"
+    },
+    {
+      "enabled": false,
+      "license_reviewed_on": "2026-06-03",
+      "license_spdx": "MIT",
+      "license_status": "checked",
+      "name": "tau_bench",
+      "path": "external/tau-bench",
+      "redistribution": "not_redistributed",
+      "source_url": "https://github.com/sierra-research/tau-bench"
+    },
+    {
+      "enabled": false,
+      "license_reviewed_on": null,
+      "license_spdx": null,
+      "license_status": "pending",
+      "name": "dialogtool",
+      "path": "external/dialogtool",
+      "redistribution": "unknown",
+      "source_url": "https://arxiv.org/abs/2505.13328"
+    },
+    {
+      "enabled": false,
+      "license_reviewed_on": "2026-06-03",
+      "license_spdx": "MIT",
+      "license_status": "checked",
+      "name": "longmemeval",
+      "path": "external/longmemeval",
+      "redistribution": "not_redistributed",
+      "source_url": "https://github.com/xiaowu0162/LongMemEval"
+    }
+  ],
+  "errors": [],
+  "n_checked": 4,
+  "n_datasets": 7,
+  "n_enabled": 2,
+  "n_pending": 1,
+  "valid": true,
+  "warnings": [
+    "dialogtool: disabled dataset remains pending license review"
+  ]
+}

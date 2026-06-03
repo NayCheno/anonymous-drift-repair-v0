@@ -1,0 +1,14 @@
+{
+  "complete": true,
+  "concurrency": 4,
+  "errors": [],
+  "input": "data\\human_validation\\human_validation_annotator_a_v0.jsonl",
+  "model": "mimo-v2.5",
+  "n_completed": 240,
+  "n_errors": 0,
+  "n_input": 240,
+  "n_requested": 240,
+  "note": "Uses OpenAI-compatible reviewer config from env; API key is never written to outputs.",
+  "output": "data\\human_validation\\llm_review\\human_validation_annotator_a_llm_v0.jsonl",
+  "resume": true
+}

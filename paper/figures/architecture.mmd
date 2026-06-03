@@ -1,0 +1,15 @@
+flowchart LR
+    A[Multi-turn trajectory] --> B[State graph construction]
+    B --> C[Active-state resolution]
+    C --> D[Drift detectors]
+    D --> E{Drift type?}
+    E -->|Goal/constraint| F[Rollback + replan]
+    E -->|Evidence/retrieval| G[Query rewrite + re-retrieve + verify]
+    E -->|Tool-state| H[Tool cross-validation]
+    E -->|Memory| I[Mark superseded memory inactive]
+    E -->|Abstention| J[Answer / clarify / abstain calibration]
+    F --> K[Repaired response + trace]
+    G --> K
+    H --> K
+    I --> K
+    J --> K

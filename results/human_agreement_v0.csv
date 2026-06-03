@@ -1,0 +1,3 @@
+comparison,mode,n_pairs,drift_type_agreement,severity_agreement,task_success_agreement,repair_action_agreement
+annotator_a_vs_answer_key,answer_key_proxy,240,1.0000,1.0000,1.0000,1.0000
+annotator_a_vs_annotator_b,answer_key_proxy,48,1.0000,1.0000,1.0000,1.0000

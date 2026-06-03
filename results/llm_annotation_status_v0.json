@@ -1,0 +1,20 @@
+{
+  "annotator_a": {
+    "n_items": 240,
+    "n_complete": 240,
+    "n_incomplete": 0,
+    "complete": true,
+    "incomplete_examples": []
+  },
+  "annotator_b": {
+    "n_items": 48,
+    "n_complete": 48,
+    "n_incomplete": 0,
+    "complete": true,
+    "incomplete_examples": []
+  },
+  "n_double_annotated": 48,
+  "n_disagreements": 33,
+  "human_annotation_completed": true,
+  "note": "Completion is evaluated on the provided annotation files. For v0, these may be filled by human annotators or an explicitly documented LLM reviewer."
+}

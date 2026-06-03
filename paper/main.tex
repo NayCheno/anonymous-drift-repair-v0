@@ -1,0 +1,412 @@
+\documentclass[letterpaper]{article}
+\usepackage[submission]{aaai2026}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+
+\title{DRIFT-Repair: Diagnosing and Repairing State Drift in Multi-Turn Retrieval-Augmented LLM Agents}
+\author{Anonymous Authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Multi-turn retrieval-augmented language-model agents increasingly combine conversation history, retrieval, tools, and memory. Yet their failures are often not isolated hallucinations: an agent may gradually drift away from the user's current goal, active constraints, retrieved evidence, tool observations, or updated memory. We formalize this phenomenon as \emph{state drift}. We introduce a taxonomy covering goal, constraint, evidence, retrieval, tool-state, memory, and abstention drift, and we propose \textsc{DriftBench}, a diagnostic benchmark with controlled state perturbations and state-level annotations. We further present \textsc{SAGE-R}, a model-agnostic state-graph framework that diagnoses drift and triggers typed repair actions including rollback, re-retrieval, tool cross-validation, clarification, and abstention. The current repository implements a deterministic v0 scaffold with generated examples, baseline proxies, repair traces, analysis tables, and a human-validation packet; these artifacts validate the research pipeline before external datasets, model-backed experiments, and completed human annotation are added.
+\end{abstract}
+
+\section{Introduction}
+
+Retrieval-augmented generation (RAG) is widely used to ground language models in external evidence, while tool-augmented agents extend LLMs with APIs, database operations, and long-horizon workflows. However, realistic use cases are rarely single-turn. A user often changes goals, adds constraints, corrects earlier assumptions, asks unanswerable questions, or provides partial information. A reliable agent must therefore maintain an evolving state over goals, constraints, evidence, tools, and memory.
+
+Recent benchmarks show that this setting remains difficult. MTRAG evaluates end-to-end human-generated multi-turn RAG conversations and reports that state-of-the-art systems struggle with later turns, unanswerable questions, non-standalone questions, and multi-domain settings \cite{mtrag2025}. Tool-agent benchmarks such as $\tau$-bench evaluate dynamic user-agent-tool interactions and compare the final database state with the intended goal state, exposing reliability gaps in realistic multi-turn domains \cite{taubench2024}. DialogTool further argues that tool-use benchmarks must consider stateful multi-turn interactions rather than only stateless single-turn tool selection \cite{dialogtool2025}.
+
+We argue that these failures are better understood as \emph{state drift}: the agent's working state gradually becomes inconsistent with the active task state. Unlike ordinary hallucination, state drift is trajectory-level. It may originate in an early wrong assumption, stale retrieval query, obsolete memory, or contradicted tool observation, and then propagate through later turns.
+
+This paper pursues three questions:
+
+\begin{enumerate}
+    \item How can state drift in multi-turn RAG agents be defined and diagnosed?
+    \item Can we construct a benchmark with state-level annotations rather than final-answer labels only?
+    \item Can typed repair actions recover from drift more reliably than generic self-reflection?
+\end{enumerate}
+
+\paragraph{Contributions.}
+The intended full paper makes four contributions:
+\begin{itemize}
+    \item We formalize state drift in multi-turn retrieval-augmented LLM agents and introduce a seven-part taxonomy.
+    \item We construct \textsc{DriftBench}, a diagnostic benchmark with controlled perturbations and state-level labels for active goals, constraints, evidence support, tool states, and abstention decisions.
+    \item We propose \textsc{SAGE-R}, a state-graph diagnosis and typed repair framework that is model-agnostic and inference-time.
+    \item We evaluate recovery, state consistency, faithfulness, cost, and over-repair across multi-turn RAG and tool-use settings.
+\end{itemize}
+
+The current v0 package implements the taxonomy, state graph, deterministic \textsc{DriftBench} scaffold, \textsc{SAGE-R} repair traces, baseline proxies, analysis tables, and annotation workflow needed to make the later empirical stage reproducible.
+
+\section{Related Work}
+
+\paragraph{Multi-turn RAG evaluation.}
+MTRAG provides 110 human-generated conversations averaging 7.7 turns across four domains, for 842 tasks \cite{mtrag2025}. Its results suggest that later turns, unanswerable questions, and non-standalone questions are particularly challenging. MTRAG-UN extends this line toward unanswerable, underspecified, non-standalone, and unclear-response cases \cite{mtragun2026}. Our work differs by introducing state-level drift annotations and repair outcomes.
+
+\paragraph{RAG evaluation and correction.}
+RAGAS proposes reference-free evaluation dimensions for RAG pipelines, including retrieval quality, faithful use of retrieved context, and generation quality \cite{ragas2023}. Corrective RAG (CRAG) improves robustness when retrieved documents are inaccurate by using a retrieval evaluator and corrective retrieval actions \cite{crag2024}. REAP maintains structured sub-tasks and facts for recursive evaluation and adaptive planning in multi-hop RAG \cite{reap2026}. Our work generalizes correction beyond retrieval quality to evolving multi-turn state.
+
+\paragraph{Tool-augmented agents.}
+$\tau$-bench evaluates agents in dynamic conversations with simulated users, tools, domain policies, and database-state outcomes \cite{taubench2024}. DialogTool emphasizes the full life cycle of stateful tool use in multi-turn dialogues, including tool creation, awareness, selection, execution, and role-consistent response generation \cite{dialogtool2025}. We use these benchmarks to study tool-state drift and repair.
+
+\paragraph{Long-term memory.}
+LongMemEval evaluates chat assistants on information extraction, multi-session reasoning, temporal reasoning, knowledge updates, and abstention in sustained interactions \cite{longmemeval2024}. Memory update and temporal reasoning are central to our definition of memory drift.
+
+\section{Problem Formulation}
+
+At turn $t$, a multi-turn RAG agent observes conversation history $H_t=\{(u_i,a_i)\}_{i<t}$, the current user instruction $Q_t$, retrieved passages $R_t$, tool outputs $O_t$, previous actions $A_{<t}$, and optional memory $M_t$. The agent produces actions $A_t$ and a response $Y_t$. We write the complete observable context as $X_t=(H_t,Q_t,R_t,O_t,A_{<t},M_t)$.
+
+We define the latent active state as:
+\begin{equation}
+S_t = \{G_t, C_t, F_t, E_t, T_t, M_t, U_t\},
+\end{equation}
+where $G_t$ is the active user goal, $C_t$ active constraints, $F_t$ factual claims, $E_t$ evidence links, $T_t$ tool/database state, $M_t$ memory state, and $U_t$ the uncertainty or abstention status.
+
+In implementation, $S_t$ is represented as a typed state graph $\mathcal{G}_t=(V_t,E_t)$ whose nodes are goals, constraints, facts, evidence items, tool observations, memory items, and uncertainty states. Each node has a status in $\{\textsc{active},\textsc{superseded}\}$ and provenance fields recording the source turn, evidence, retrieval, or tool output. Active-state resolution is a function
+\begin{equation}
+\operatorname{active}(\mathcal{G}_t)=\{v\in V_t: \operatorname{status}(v)=\textsc{active}\},
+\end{equation}
+where later goal shifts supersede incompatible earlier goals, later constraint updates supersede obsolete constraints, and memory updates supersede contradicted memory nodes.
+
+\paragraph{State drift.}
+A drift occurs when the generated action or response is inconsistent with at least one active state component:
+\begin{equation}
+D_t = \mathbb{I}\left[\exists z \in S_t: \operatorname{conflict}(z, A_t, Y_t) > \tau_z\right].
+\end{equation}
+We further assign a typed drift label and severity,
+\begin{equation}
+\ell_t \in \mathcal{L}, \quad
+\mathcal{L}=\{\mathrm{G1},\mathrm{G2},\mathrm{E1},\mathrm{E2},\mathrm{T1},\mathrm{M1},\mathrm{U1},\mathrm{NONE}\},
+\end{equation}
+with $s_t\in\{\mathrm{low},\mathrm{medium},\mathrm{high}\}$ derived from the conflicting active nodes and their provenance.
+
+\paragraph{Diagnosis.}
+The diagnosis function outputs a structured record:
+\begin{equation}
+\mathcal{D}_t = \operatorname{diagnose}(H_t,R_t,O_t,A_t,Y_t)
+\end{equation}
+including drift type $\ell_t$, triggering turn, conflicting nodes, severity $s_t$, module-level signals, and suggested repair $r_t$.
+
+\paragraph{Repair.}
+Given a diagnosis, repair seeks a corrected state and response:
+\begin{equation}
+(S'_t,Y'_t) = \operatorname{repair}(S_t,\mathcal{D}_t,H_t,R_t,O_t)
+\end{equation}
+optimizing task success, state consistency, faithfulness, and cost.
+
+\section{State Drift Taxonomy}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+Code & Drift type & Example failure \\
+\midrule
+G1 & Goal drift & Answers old task after user changes goal \\
+G2 & Constraint drift & Violates latest budget/date/source constraint \\
+E1 & Evidence drift & Claims unsupported or contradicted by evidence \\
+E2 & Retrieval drift & Retrieves for stale intent \\
+T1 & Tool-state drift & Ignores tool/database observation \\
+M1 & Memory drift & Uses obsolete user preference or fact \\
+U1 & Abstention drift & Answers when evidence is absent, or over-refuses \\
+\bottomrule
+\end{tabular}
+\caption{Planned taxonomy of state drift in multi-turn retrieval-augmented agents.}
+\end{table}
+
+This taxonomy is designed to separate ordinary hallucination from trajectory-level state failure. For example, if an agent processes a refund after a tool returns \emph{not eligible}, the failure is not merely a factual hallucination; it is a tool-state conflict. If the user updates a constraint from ``under $500'' to ``under $800'' and the agent still filters products by the old constraint, this is memory or constraint drift.
+
+\section{DriftBench Construction}
+
+\textsc{DriftBench} will be built by transforming existing multi-turn tasks into controlled diagnostic cases. Each case contains the original conversation, retrieved evidence or tool observations, perturbations, active-state labels, and expected repair actions.
+
+\paragraph{Sources.}
+We plan to use MTRAG/MTRAG-UN for multi-turn RAG, $\tau$-bench or DialogTool for stateful tool use, and optionally LongMemEval for sustained memory.
+
+\paragraph{Controlled perturbations.}
+We will inject or select cases with:
+\begin{itemize}
+    \item user goal shifts;
+    \item constraint updates;
+    \item conflicting retrieved evidence;
+    \item stale retrieval queries;
+    \item tool outputs that contradict planned actions;
+    \item memory updates that supersede old preferences;
+    \item unanswerable or underspecified user turns.
+\end{itemize}
+
+\paragraph{Annotation schema.}
+Each case will include active goals, active constraints, supported claims, contradicted claims, tool-state labels, memory supersession links, and gold action among answer, re-retrieve, call tool, ask clarification, abstain, or rollback.
+
+\section{Method: SAGE-R}
+
+\textsc{SAGE-R} has four stages.
+
+\paragraph{1. State graph construction.}
+We convert the conversation trajectory into a typed graph. Nodes represent user goals, constraints, retrieved evidence, tool calls, tool observations, claims, memories, and responses. Edges include \texttt{supports}, \texttt{contradicts}, \texttt{updates}, \texttt{supersedes}, \texttt{depends-on}, and \texttt{requires-clarification}.
+
+\paragraph{2. Active-state resolution.}
+The framework resolves which historical items remain active. Explicit user updates supersede earlier constraints; tool/database outputs override agent assumptions; assumptions remain defeasible; and uncertain states trigger verification or clarification.
+
+\paragraph{3. Drift detection.}
+Detectors score goal consistency, constraint consistency, evidence faithfulness, retrieval-goal alignment, tool-state consistency, temporal consistency, and abstention calibration.
+
+\paragraph{4. Typed repair.}
+Each drift type triggers a repair policy:
+\begin{itemize}
+    \item Goal or constraint drift: rollback to last consistent state and re-plan.
+    \item Evidence or retrieval drift: rewrite query, re-retrieve, verify claims, regenerate.
+    \item Tool-state drift: re-check tool output, cross-validate, or revise action.
+    \item Memory drift: update memory priority and mark superseded facts inactive.
+    \item Abstention drift: choose answer, clarify, retrieve more, or abstain.
+\end{itemize}
+
+\begin{figure}[t]
+\centering
+\fbox{
+\begin{minipage}{0.94\linewidth}
+\small
+\textbf{SAGE-R inference-time diagnosis and repair}
+\begin{enumerate}
+    \item Build a typed state graph from conversation turns, retrieved evidence, tool observations, memory updates, and the candidate response.
+    \item Resolve active state by marking superseded goals, constraints, and memories inactive; tool observations override agent assumptions.
+    \item Run modular detectors for goal/constraint, retrieval, evidence/abstention, tool-state, and memory drift.
+    \item Aggregate drift signals into a diagnosis record with type, severity, conflicting nodes, confidence, and suggested repair.
+    \item If no drift is detected, preserve the response. Otherwise apply the highest-priority typed repair: rollback/replan, rewrite/retrieve, verify claims, cross-check tools, update memory priority, or abstain/clarify.
+    \item Log a repair trace with checked state, actions, stop condition, and cost for downstream analysis.
+\end{enumerate}
+\end{minipage}
+}
+\caption{\textsc{SAGE-R} algorithm box. The current implementation is a deterministic scaffold; future experiments replace rule modules with model-backed extraction, retrieval, verification, and judging.}
+\label{fig:sage-r-algorithm}
+\end{figure}
+
+\section{Experimental Design}
+
+\paragraph{Baselines.}
+We compare against vanilla multi-turn RAG, standalone query rewriting, RAGAS-style filtering, self-reflection, ReAct, CRAG-style corrective RAG, and planner-RAG or REAP-style baselines.
+
+\paragraph{Metrics.}
+Final-task metrics include task success, exact match/F1 when applicable, database goal match, and judge/human preference. State metrics include goal consistency, constraint consistency, evidence consistency, tool-state consistency, temporal consistency, and abstention calibration. Repair metrics include recovery rate, repair precision, over-repair rate, time-to-recovery, and token/tool-call overhead.
+
+\paragraph{Human validation.}
+Because LLM judges can be unstable, we will manually validate at least 200--300 cases and report judge-human agreement.
+
+\section{Current Scaffold Results}
+
+This section records the current deterministic v0 scaffold results. The purpose is to validate data flow, diagnosis traces, repair traces, table generation, and analysis scripts before external datasets and model calls are added. These numbers should not be interpreted as final benchmark claims.
+
+\paragraph{DriftBench v0.}
+The current repository contains 300 toy-equivalent draft examples generated from 21 hand-written templates. The set covers the seven drift types in our taxonomy and includes clean controls. We compare \textsc{SAGE-R} with three deterministic baseline proxies: vanilla RAG, query-rewriting RAG, and self-reflection. Table~\ref{tab:v0-main} summarizes the current scaffold metrics.
+
+% BEGIN inlined tables/generated/main_table_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
+\toprule
+System & Exact & F1 & Repair & Over-repair & Tokens \\
+\midrule
+SAGE-R & 1.0000 & 1.0000 & 0.8533 & 0.0000 & 42.08 \\
+QueryRewrite & 0.2900 & 0.4765 & 0.2367 & 0.0000 & 4.26 \\
+SelfReflect & 0.4300 & 0.7680 & 0.6133 & 0.0000 & 39.25 \\
+Vanilla & 0.1467 & 0.0000 & 0.0000 & 0.0000 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Deterministic DriftBench v0 scaffold results. These numbers validate the pipeline and are not final benchmark claims.}
+\label{tab:v0-main}
+\end{table}
+% END inlined tables/generated/main_table_v0
+
+Table~\ref{tab:v0-stats} reports paired bootstrap comparisons for the deterministic scaffold. These intervals and p-values validate the reporting code path only; they must be recomputed on real model-backed runs before final claims.
+
+% BEGIN inlined tables/generated/statistical_tests_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\toprule
+Comparison & Metric & Delta & 95\% CI & p \\
+\midrule
+SAGE-R $-$ query\_rewrite\_rag & Exact & 0.7100 & [0.6600, 0.7567] & 0.0000 \\
+SAGE-R $-$ query\_rewrite\_rag & Micro-F1 & 0.5235 & [0.4621, 0.5897] & 0.0000 \\
+SAGE-R $-$ self\_reflection & Exact & 0.5700 & [0.5132, 0.6233] & 0.0000 \\
+SAGE-R $-$ self\_reflection & Micro-F1 & 0.2320 & [0.2032, 0.2612] & 0.0000 \\
+SAGE-R $-$ vanilla\_rag & Exact & 0.8533 & [0.8133, 0.8933] & 0.0000 \\
+SAGE-R $-$ vanilla\_rag & Micro-F1 & 1.0000 & [1.0000, 1.0000] & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Paired bootstrap comparisons for the deterministic v0 scaffold. These tests validate the reporting pipeline and are not final statistical claims.}
+\label{tab:v0-stats}
+\end{table}
+% END inlined tables/generated/statistical_tests_v0
+
+\paragraph{Ablations.}
+Table~\ref{tab:v0-ablation} reports deterministic module-removal ablations. These isolate whether the scaffold can attribute failures to the expected detector family. The diagnose-only variant preserves type detection but disables repair, so it has zero repair cost by construction.
+
+% BEGIN inlined tables/generated/ablation_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Variant & Exact & F1 & Repair & Tokens \\
+\midrule
+Full & 1.0000 & 1.0000 & 0.8533 & 42.08 \\
+w/o Goal+Constr. & 0.6700 & 0.8374 & 0.8067 & 37.58 \\
+w/o Retrieval & 0.7633 & 0.9152 & 0.8533 & 42.08 \\
+w/o Evid.+Abst. & 0.7633 & 0.8359 & 0.6633 & 32.58 \\
+w/o Tool & 0.8067 & 0.9139 & 0.6600 & 33.96 \\
+w/o Memory & 0.8600 & 0.9343 & 0.7133 & 36.76 \\
+Diagnose-only & 1.0000 & 1.0000 & 0.0000 & 0.00 \\
+\bottomrule
+\end{tabular}
+\caption{Deterministic ablations on DriftBench v0. Module-removal variants isolate diagnosis coverage in the scaffold.}
+\label{tab:v0-ablation}
+\end{table}
+% END inlined tables/generated/ablation_v0
+
+\paragraph{Cost, over-repair, and validation workflow.}
+Table~\ref{tab:v0-cost} summarizes extra token, retrieval, and tool-call cost proxies. Table~\ref{tab:v0-over-repair} reports clean-case over-repair on examples whose gold action is answer-as-is. Table~\ref{tab:v0-human} records the validation workflow scaffold: a 240-case blinded annotation packet with a 48-case double-annotation subset. The proxy table uses the answer key only and is not reportable. Table~\ref{tab:v0-llm-validation} reports the completed Mimo-reviewed validation pass over the same packet; it should be described as LLM-reviewed validation, not human-only annotation.
+
+% BEGIN inlined tables/generated/cost_analysis_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+System & Repaired & Tokens & Retrievals & Tools \\
+\midrule
+QueryRewrite & 71 & 4.26 & 0.2367 & 0.0000 \\
+SAGE-R & 256 & 42.08 & 0.5667 & 0.1933 \\
+SelfReflect & 184 & 39.25 & 0.0000 & 0.0000 \\
+Vanilla & 0 & 0.00 & 0.0000 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Cost logging summary for the deterministic v0 scaffold.}
+\label{tab:v0-cost}
+\end{table}
+% END inlined tables/generated/cost_analysis_v0
+% BEGIN inlined tables/generated/over_repair_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
+\toprule
+System & Clean & Over-repaired & Rate \\
+\midrule
+QueryRewrite & 44 & 0 & 0.0000 \\
+SAGE-R & 44 & 0 & 0.0000 \\
+SelfReflect & 44 & 0 & 0.0000 \\
+Vanilla & 44 & 0 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Clean-case over-repair analysis for the deterministic v0 scaffold. The rate is computed over examples whose gold action is answer-as-is.}
+\label{tab:v0-over-repair}
+\end{table}
+% END inlined tables/generated/over_repair_v0
+% BEGIN inlined tables/generated/human_agreement_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Comparison & Pairs & Drift & Severity & Repair \\
+\midrule
+A vs key & 240 & 1.0000 & 1.0000 & 1.0000 \\
+A vs B & 48 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+\caption{Human-validation workflow scaffold. The current v0 table uses an answer-key proxy and must be replaced by filled human annotations before final reporting.}
+\label{tab:v0-human}
+\end{table}
+% END inlined tables/generated/human_agreement_v0
+% BEGIN inlined tables/generated/llm_human_agreement_v0
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Comparison & Pairs & Drift & Severity & Repair \\
+\midrule
+A vs key & 240 & 0.4750 & 0.3583 & 0.3958 \\
+A vs B & 48 & 0.5833 & 0.6250 & 0.7500 \\
+\bottomrule
+\end{tabular}
+\caption{Mimo-reviewed validation on the deterministic v0 packet. The table reports agreement between the LLM-reviewed labels, the scaffold answer key, and the 48-item double-reviewed subset. These results are LLM-reviewed validation, not human-only annotation.}
+\label{tab:v0-llm-validation}
+\end{table}
+% END inlined tables/generated/llm_human_agreement_v0
+
+\section{Expected Findings}
+
+We expect typed repair to outperform generic self-reflection especially on tool-state, constraint, and retrieval drift. We also expect over-repair to be a real failure mode: some correct responses may be unnecessarily revised. Therefore, the repair policy must include confidence thresholds and abstain from repair when diagnosis is uncertain.
+
+\section{Limitations}
+
+The benchmark may over-represent controlled perturbations compared with naturally occurring failures. LLM-based extraction and judging may introduce bias. Repair can increase latency and cost. Finally, reliable diagnosis does not guarantee safe deployment in high-stakes domains; domain-specific verification remains necessary.
+
+\section{Conclusion}
+
+This draft proposes a research program for diagnosing and repairing state drift in multi-turn retrieval-augmented LLM agents. The intended contribution is not another monolithic agent, but a diagnostic framework, benchmark, and evaluation protocol for trajectory-level reliability.
+
+\begin{thebibliography}{99}
+\bibitem{mtrag2025}
+Yannis Katsis, Sara Rosenthal, Kshitij Fadnis, Chulaka Gunasekara, Young-Suk Lee, Lucian Popa, Vraj Shah, Huaiyu Zhu, Danish Contractor, and Marina Danilevsky. 2025.
+\newblock MTRAG: A Multi-Turn Conversational Benchmark for Evaluating Retrieval-Augmented Generation Systems.
+\newblock \emph{Transactions of the Association for Computational Linguistics}.
+
+\bibitem{mtragun2026}
+Huaiyu Zhu et al. 2026.
+\newblock MTRAG-UN: A Benchmark for Open Challenges in Multi-Turn Retrieval-Augmented Generation.
+\newblock arXiv preprint.
+
+\bibitem{taubench2024}
+Shunyu Yao, Noah Shinn, Pedram Razavi, and Karthik Narasimhan. 2024.
+\newblock $\tau$-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains.
+\newblock arXiv preprint arXiv:2406.12045.
+
+\bibitem{dialogtool2025}
+Hongru Wang, Wenyu Huang, Yufei Wang, Yuanhao Xi, Jianqiao Lu, Huan Zhang, Nan Hu, Zeming Liu, Jeff Z. Pan, and Kam-Fai Wong. 2025.
+\newblock Rethinking Stateful Tool Use in Multi-Turn Dialogues: Benchmarks and Challenges.
+\newblock \emph{Findings of ACL 2025}.
+
+\bibitem{ragas2023}
+Shahul Es, Jithin James, Luis Espinosa-Anke, and Steven Schockaert. 2023.
+\newblock RAGAS: Automated Evaluation of Retrieval Augmented Generation.
+\newblock arXiv preprint arXiv:2309.15217.
+
+\bibitem{crag2024}
+Shi-Qi Yan et al. 2024.
+\newblock Corrective Retrieval Augmented Generation.
+\newblock \emph{International Conference on Learning Representations}.
+
+\bibitem{reap2026}
+Yijie Zhu, Haojie Zhou, Wanting Hong, Tian Liu, and Ning Wang. 2026.
+\newblock REAP: Enhancing RAG with Recursive Evaluation and Adaptive Planning for Multi-Hop Question Answering.
+\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence}.
+
+\bibitem{longmemeval2024}
+Di Wu, Hongwei Wang, Wenhao Yu, Yuwei Zhang, Kai-Wei Chang, and Dong Yu. 2024.
+\newblock LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory.
+\newblock arXiv preprint arXiv:2410.10813.
+\end{thebibliography}
+
+\end{document}

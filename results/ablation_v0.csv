@@ -1,0 +1,8 @@
+variant,n_examples,drift_type_exact_match,micro_precision,micro_recall,micro_f1,repair_rate,over_repair_rate,avg_extra_tokens,avg_extra_retrievals,avg_extra_tool_calls
+full_sage_r,300,1.0000,1.0000,1.0000,1.0000,0.8533,0.0000,42.08,0.5667,0.1933
+wo_goal_constraint,300,0.6700,1.0000,0.7203,0.8374,0.8067,0.0000,37.58,0.5200,0.1933
+wo_retrieval,300,0.7633,1.0000,0.8436,0.9152,0.8533,0.0000,42.08,0.5667,0.1933
+wo_evidence_abstention,300,0.7633,1.0000,0.7181,0.8359,0.6633,0.0000,32.58,0.3767,0.1933
+wo_tool_state,300,0.8067,1.0000,0.8414,0.9139,0.6600,0.0000,33.96,0.5667,0.0000
+wo_memory,300,0.8600,1.0000,0.8767,0.9343,0.7133,0.0000,36.76,0.5200,0.1933
+diagnose_only,300,1.0000,1.0000,1.0000,1.0000,0.0000,0.0000,0.00,0.0000,0.0000
